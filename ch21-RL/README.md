@@ -56,5 +56,47 @@ The agent needs to decide which action to take (policy) as well as learn the `U^
 Learn the model `P` and compute the optimal policy with `passive ADP`. Pure exploitation. 
 This seldom converges to the optimal policy in the long term, because it "stopped learning". 
 
-Therefore, we need an exploration policy (bandit problem).  
+Therefore, we need an exploration policy (bandit problem). 
+
+#### ADP with exploration function
+Value iteration with an ADP agent, changing the update function to use an optimistic estimate of the `U`, `U+`. The exploration function `f(u, n)` where `u` is the utility estimate and `n` is the number of times the state-action has been visited. The `f(u, n)` should be decreasing in `n` and increasing in `u`. It converges quickly towards optimal performance. 
+
+`U+(s) = R(s) + gamma * max_{a}(f(summation_{s'}(P(s'|s,a) * U+(s')), N(s, a)))`
+
+An example of `f(u, n)` is:
+
+```Haskell
+f(u, n) = 
+    | n < Ne = R+
+    | otherwise = u
+```
+
+where `Ne` is a constant and `R+` is the optimistic estimate of the best possible estimate obtainable in any state. 
+
+#### Q-Learning 
+TD method but using Q-values instead of utility values. Because of the relationship between `U(s)` and `Q(s,a)`:
+
+```
+U(s) = max_{a}(Q(s, a))  # U of a state is the utility of choosing the best action in that state
+```
+
+The update function is (identical to TD):
+
+```
+Q(s,a) = Q(s,a) + alpha * (R(s) + gamma * max_{a'}(Q(s', a')) - Q(s, a))
+```
+
+The next action can be chosen using the exploration function: 
+```
+a_next = argmax_{a'}(f(Q(s', a'), N(s', a')))
+```
+
+A close relative of Q-learning is SARSA.
+
+These converge more slowly than ADP. 
+
+### Generalization in RL
+
+
+
 
