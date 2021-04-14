@@ -5,8 +5,8 @@ Objective: learn the optimal policy from observed rewards without knowledge of f
 **Agent designs**: 
 | Agent design | Choose action based on... | Note |
 | -- | -- | -- |
-| Utility-based agent (not really RL) | Utility of states | MUST know the states to which its actions will lead. |
-| Q-learning agent | Action utility | Don't need to know the outcome of the actions, so cannot look ahead. | 
+| Model-based agent | Utility of states | MUST know the states to which its actions will lead. |
+| Model-free agent | State-Action utility | Don't need to know the outcome of the actions, so cannot look ahead. | 
 | Reflex agent | Policy (state->action) | |
 
 ### Passive RL
@@ -96,7 +96,32 @@ A close relative of Q-learning is SARSA.
 These converge more slowly than ADP. 
 
 ### Generalization in RL
+Using a lookup table to store `U(s)` or `Q(s, a)` is not practical for large state spaces. Therefore, we can use **function approximation**. Besides compressing the state space, fitting a linear function is also generalizing for all states, learning faster.
 
+Function approximation represents `U(s)` or `Q(s, a)` as a weighted linear function of a set of features/basis functions. The task is to learn the weights when adjusting `U` with an online learning algorithm (that updates the parameters after each trial).
+
+```
+U(x, y) = theta_0 + theta_1 * x + theta_2 * y
+```
+
+**Widrow-Hoff/delta rule** aims to minimize the mean square difference between the predicted (expected) and the actual (observed) data or response. Error where `u(s)` is the observed utility from this specific run: 
+```
+E(s) = (U(s) - u(s))^2 / 2
+```
+
+The rule is: 
+```
+theta_i = theta_i - alpha * (dE(s)/dTheta_i) = theta_i + alpha * (u(s) - U(s))*dU(s)/dTheta_i # for linear approximator functions, dU(s)/dTheta is x_i
+```
+
+For TD or Q-learning, we reduce the temporal difference between successive states, not the squared difference:
+```
+theta_i = theta_i + alpha * ((R(s) + gamma*U(s') - U(s)) * dU(s)/dTheta_i)
+```
+
+The function approximator is **linear in parameters**, but the features can be non-linear (eg.: Euclidean distance given (x, y)). 
+
+### Policy search
 
 
 
