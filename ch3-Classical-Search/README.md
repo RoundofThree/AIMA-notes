@@ -1,4 +1,4 @@
-## Classical Search 
+# Classical Search 
 
 Agent: goal-based agent called **problem solving agent**. 
 
@@ -18,7 +18,7 @@ problem <- FORMULATE_PROBLEM(current_state, goal)
 solution <- SEARCH(problem)
 ```
 
-#### Problem 
+## Problem 
 
 Definition of state space (a directed graph):
 
@@ -49,7 +49,7 @@ An **optimal solution** has the lowest path cost amongst all solutions.
 In **problem formulation**, **abstraction** involves removing as much details as possible 
 while retaining validity and ensuring that the abstract actions are easy to carry out. 
 
-##### Examples of problems
+### Examples of problems
 
 - Vacuum world
 - 8-puzzle -> a sliding-block puzzle (NP complete)
@@ -82,7 +82,7 @@ An example of touring problem is TSP. <br />
 - Robot navigation 
 - Automatic assembly sequencing: eg. protein design 
 
-#### Search algorithms 
+## Search algorithms 
 
 **Frontier/Open list**: set of all leaf nodes available for expansion at any given point. <br />
 Redundant paths can cause a tractable problem to become intractable. Some problem formulations
@@ -115,7 +115,7 @@ Time and space complexities are expressed in terms of:
 - Search cost: time or space used to find the goal 
 - Total cost: search cost + path cost 
 
-##### Uninformed strategies (blind)
+### Uninformed strategies (blind)
 
 1. Breadth first search 
     - Frontier: FIFO queue
@@ -135,24 +135,68 @@ Time and space complexities are expressed in terms of:
     but if all step costs are the same, breadth first search is faster.
 3. Depth first search (tree search)
     - Frontier: LIFO queue
-    - 
+    - Completeness: no, may loop forever
+    - Optimality: no
+    - Time complexity: `O(b^m)`, where `m` is the maximum depth of any node, which may be INF
+    - Space complexity: `O(bm)` 
 
 4. Depth first search (graph search)
+    - Frontier: LIFO queue
+    - Completeness: yes, given state space is finite
+    - Optimality: no
+    - Time complexity: `O(b^m)`
+    - Space complexity: `O(b^m)` 
 
-5. Depth limited search
-4. Iterative deepening search 
-5. Bidirectional search 
+5. Backtracking search (depth first search):
+    - Generate only one successor at a time
+    - Modify the current state rather than copy the state, need to undo modifications
+    - Space complexity: `O(m)`, one state description and `O(m)` actions
 
-**Table summary**:
+6. Depth limited search
+    - Completeness: yes, given `l >= d`
+    - Optimality: yes, given `l == d`
+    - The diameter of the state space is a good depth limit
+
+7. Iterative deepening search (**Preferred uninformed when search space is large and the depth d is not known**)
+    - It combines breadth first search and depth first search
+    - Completeness: yes, given the state space is finite
+    - Optimality: yes, given the path cost is a nondecreasing function of the depth of the node
+    - Time complexity: `O(b^d)` as BFS
+    - Space complexity: `O(bm)`
+
+A hybrid approach is to run BFS until almost all memory is consumed, then run IDS from all
+the nodes in the frontier. 
+
+8. Bidirectional search 
+    - Only when there is an explicit goal state
+    - Time complexity: `O(b^{d/2})`
+    - Space complexity: `O(b^{d/2})`, one frontier must be in memory, but the other can run IDS
+
+### Informed strategies 
+
+**Evaluation function**: `f(n)`, most include a **heuristic function** `h(n)`, which is the estimated cost of the cheapest path from the state at node `n` to a goal state. 
+
+1. Greedy best first search
+    - `f(n) = h(n)`
+    - Completeness: no (tree search, infinite loop), yes (graph search, given finite state space)
+    - Time complexity: `O(b^m)`
+2. A* search 
+    - `f(n) = g(n) + h(n)`
+    - Completeness: yes
+    - Optimality: yes
+    - Optimal ???: smallest number of expanded nodes for given heuristic  
+    - Conditions: 
+        1. Admissible heuristics: `f(n) < cost of solution path`
+        2. Consistent heuristics: `h(n) <= h(n') + c(n, a, n')`, where c is the cost of action
+        3. Tree search is optimal if admissible
+        4. Graph search is optimal if consistent, because `f(n)` is nondecreasing 
+    - Time complexity: `O(b^{ed})`
+    - Space complexity: `O(b^{ed})`, where e is the relative error `(h - h*)/h*`, which makes 
+    it unfeasible for large state spaces
+3. Iterative deepening A* search
+    - Increasing limits on `f(n)`
 
 
-##### Informed strategies 
-
-**Evaluation function**: `f(n)` 
-
-1. Best first search 
-2. Greedy best first search 
-3. A* search 
 4. Recursive best first search 
 5. Simplified memory bounded A*
 
