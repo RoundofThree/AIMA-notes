@@ -1,6 +1,6 @@
 ## Non-Classical Search 
 
-These algorithms are designed for task environments other than finding the shortest path to a goal in a fully-observable, deterministic and discrete environment (that classical search assumes). 
+These algorithms are designed for task environments other than finding the shortest path to a goal in a fully-observable, deterministic and discrete environment (that classical search assumes). It is also called **local search**. 
 
 - Hill climbing
 - Simulated annealing 

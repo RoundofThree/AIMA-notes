@@ -2,7 +2,7 @@
 
 Key points:
 - Agent and agent function (percept -> action mapping)
-- Performance measure evaluates the behaviour of the agent in the environment. Maximised by rational agent. 
+- Performance measure evaluates the behavior of the agent in the environment. Maximised by rational agent. 
 - Task environment. It can be:
     - Fully or partially observable 
     - Deterministic or stochastic 
