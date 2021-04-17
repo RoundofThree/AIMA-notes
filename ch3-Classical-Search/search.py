@@ -146,7 +146,35 @@ def best_first_graph_search(problem, f, display=False) -> Node:
                     frontier.append(child)  
     return None 
 
-# Recursive best-first search --- doubts?????????
+# Iterative deepening A* search
+def idastar(problem, h=None) -> Node:
+    h = memoize(h or problem.h, 'h')
+
+    def dfs_contour(node, f_limit):
+        next_f = np.inf
+        if h(node) > f_limit:
+            return None, h(node)
+        if problem.goal_test(node.state):
+            return node, f_limit
+        successors = node.expand(problem)
+        for s in successors:
+            solution, newf = dfs_contour(s, f_limit)
+            if solution is not None:
+                return solution, f_limit
+            next_f = min(next_f, newf)
+        return None, next_f
+
+    node = Node(problem.initial)
+    f_limit = h(node)
+    while True:
+        # explore with contour = limit
+        solution, f_limit = dfs_contour(node, f_limit)
+        if solution is not None:
+            return solution
+        if f_limit == np.inf:
+            return "failure"
+    
+# Recursive best-first search
 def recursive_best_first_search(problem, h=None) -> Node:
     h = memoize(h or problem.h, 'h')
     
@@ -283,6 +311,9 @@ def bidirectional_search(problem):
             U, openB, closedB, gB = extend(U, openB, openF, gB, gF, closedB)
 
     return np.inf
+
+# Simplified memory bounded A* search
+# TODO
 
 class EightPuzzle(Problem):
     def __init__(self, initial, goal=(1,2,3,4,5,6,7,8,0)):

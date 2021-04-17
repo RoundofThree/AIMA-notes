@@ -184,20 +184,83 @@ the nodes in the frontier.
     - `f(n) = g(n) + h(n)`
     - Completeness: yes
     - Optimality: yes
-    - Optimal ???: smallest number of expanded nodes for given heuristic  
+    - Optimally efficient: smallest number of expanded nodes for given heuristic  
     - Conditions: 
         1. Admissible heuristics: `f(n) < cost of solution path`
         2. Consistent heuristics: `h(n) <= h(n') + c(n, a, n')`, where c is the cost of action
         3. Tree search is optimal if admissible
         4. Graph search is optimal if consistent, because `f(n)` is nondecreasing 
-    - Time complexity: `O(b^{ed})`
+    - Time complexity: `O(b^{ed})`, only expands nodes with `f(n) > C*`, where `C*` is the optimal cost 
     - Space complexity: `O(b^{ed})`, where e is the relative error `(h - h*)/h*`, which makes 
     it unfeasible for large state spaces
 3. Iterative deepening A* search
-    - Increasing limits on `f(n)`
-
-
+    - DFS 
+    - Increasing limits on `f(n)` f-contour
+    - Completeness: yes, as A* 
+    - Optimality: yes, if heuristics conditions are met
+    - Time complexity: depends on the number of different heuristic values
+    - Space complexity: `O(bf*/delta)`, where delta is the smallest step cost and f* is the optimal cost
+    - Excessive node generation if every node has a different `f(n)`
 4. Recursive best first search 
+    - Similar to recursive depth-first search that searches the most optimal successor node but with `f_limit` variable to keep track of the best alternative path available from any ancestor of the current node 
+    - Excessive node generation because `h` is usually less optimistic when closer to the goal
+    - Completeness: yes, as A* 
+    - Optimality: yes, if `h` is admissible
+    - Time complexity: depends on how often the best path changes 
+    - Space complexity: `O(bd)`
 5. Simplified memory bounded A*
+    - A* expanding until the memory = closed list + open list
+    - Drop the worst leaf node in open list
+    - For each new successor, the `f(n)` is propagated back up the tree (update occurs after full expansion)
+    - Completeness: yes, if `d < memory size`
+    - Optimality: yes, if reachable in memory size 
+
+```Python
+def smastar(problem, h=None, MAX):
+    def backup(node):
+        if completed(node) and node.parent is not None:
+            oldf = node.f
+            node.f = least f cost of all successors 
+            if oldf != node.f:
+                backup(node.parent)
+
+    openL = binary tree of binary trees
+    root = Node(problem.initial)
+    openL.add(root)
+    used = 1
+
+    # logic
+    while True:
+        if len(openL) == 0:
+            return "failure"
+        best = openL.best() # deepest least f node
+        if problem.goal_test(best):
+            return best
+        succ = next_successor(best)
+        succ.f = max(best.f, succ.path_cost + h(succ))
+        if completed(best): # all successors have been evaluated 
+            backup(best)
+        if best.expand(problem) all in memory:
+            openL.remove(best)
+        used = used + 1
+        if used > MAX:
+            deleted = openL.remove_worst()
+            remove deleted from its parents successors list
+            openL.add(deleted.parent)
+            used = used - 1
+        openL.add(succ)
+
+```
+
+### Heuristics
+**Effective branching factor**: `N+1 = 1 + b* + (b*)^2 + (b*)^3 + ... + (b*)^d`. The `b*` is ideally close to 1. A better heuristics dominates a worse heuristics, `hbest(n) > hworse(n)`. 
 
 *Heuristics can be obtained via relaxation, precomputing patterns, or learning from experience (neural nets, decision trees, reinforcement learning).*
+
+To have the best of all heuristics:
+```
+h(n) = max {h1(n), h2(n), h3(n), ... } 
+```
+**Pattern databases**: store exact solution costs for every possible subproblem instance, to compute an admissible heuristics for each complete state during the search. 
+
+**Disjoint pattern databases**: they are additive 
