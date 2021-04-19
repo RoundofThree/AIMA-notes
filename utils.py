@@ -1,9 +1,11 @@
 import functools 
 import heapq
+import random 
 
 def is_in(elt, seq):
     """Similar to (elt in seq), but comparing with 'is' """
     return any(x is elt for x in seq)
+
 
 def memoize(fn, slot=None, maxsize=32):
     """Memoize fn: make it remember the computed value for any argument list.
@@ -24,6 +26,76 @@ def memoize(fn, slot=None, maxsize=32):
 
     return memoized_fn
 
+# Problem and node classes
+class Problem:
+    """The abstract class for a formal problem. """
+    
+    def __init__(self, initial, goal=None) -> None:
+        self.initial = initial
+        self.goal = goal 
+
+    def actions(self, state):
+        raise NotImplementedError
+
+    def result(self, state, action):
+        raise NotImplementedError
+
+    def goal_test(self, state):
+        if isinstance(self.goal, list):
+            return is_in(state, self.goal)
+        else:
+            return state == self.goal 
+
+    def path_cost(self, c, state1, action, state2):
+        """Cost of solution path that arrives at state2 from state1 via action, 
+        assuming cost c to get to state1."""
+        return c+1
+
+    def value(self, state):
+        """For optimisation problems."""
+        raise NotImplementedError
+
+class Node:
+    """Node in search tree."""
+    def __init__(self, state, parent=None, action=None, path_cost=0) -> None:
+        self.state = state # current state
+        self.parent = parent  # from which Node 
+        self.action = action # from which action 
+        self.path_cost = path_cost # path_cost so far
+        self.depth = 0 # depth in search tree 
+        if parent:
+            self.depth = parent.depth + 1
+
+    def __repr__(self) -> str:
+        return f'<Node {self.state}>'
+
+    def __lt__(self, node) -> bool:
+        return self.state < node.state 
+
+    def expand(self, problem) -> list:
+        """List of reachable nodes in one step."""
+        return [self.child_node(problem, action) for action in problem.actions(self.state)]
+
+    def child_node(self, problem, action):
+        next_state = problem.result(self.state, action)
+        next_node = Node(next_state, self, action, problem.path_cost(self.path_cost, self.state, action, next_state))
+        return next_node 
+
+    def solution(self):
+        node, path_back = self, [] 
+        while node:
+            path_back.append(node)
+            node = node.parent 
+        return list(reversed(path_back))
+
+    # equal if same state 
+    def __eq__(self, other):
+        return isinstance(other, Node) and self.state == other.state 
+
+    def __hash__(self):
+        return hash(self.state) 
+
+# Data structures
 class PriorityQueue:
     """A Queue in which the minimum (or maximum) element (as determined by f and
     order) is returned first.
@@ -80,3 +152,25 @@ class PriorityQueue:
         except ValueError:
             raise KeyError(str(key) + " is not in the priority queue")
         heapq.heapify(self.heap)
+
+# ______________________________________________________________________________
+# argmin and argmax
+
+identity = lambda x: x
+
+
+def argmin_random_tie(seq, key=identity):
+    """Return a minimum element of seq; break ties at random."""
+    return min(shuffled(seq), key=key)
+
+
+def argmax_random_tie(seq, key=identity):
+    """Return an element with highest fn(seq[i]) score; break ties at random."""
+    return max(shuffled(seq), key=key)
+
+
+def shuffled(iterable):
+    """Randomly shuffle a copy of iterable."""
+    items = list(iterable)
+    random.shuffle(items)
+    return items
