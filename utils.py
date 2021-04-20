@@ -1,6 +1,7 @@
 import functools 
 import heapq
 import random 
+import bisect
 
 def is_in(elt, seq):
     """Similar to (elt in seq), but comparing with 'is' """
@@ -52,7 +53,11 @@ class Problem:
         return c+1
 
     def value(self, state):
-        """For optimisation problems."""
+        """For optimisation problems (local search)."""
+        raise NotImplementedError
+
+    def random_state(self):
+        """Return a random state. Useful for random restart and local beam search."""
         raise NotImplementedError
 
 class Node:
@@ -174,3 +179,16 @@ def shuffled(iterable):
     items = list(iterable)
     random.shuffle(items)
     return items
+
+# __________________________________________________________________________________
+# Maths and statistics
+
+def probability(p):
+    """Return true with probability p."""
+    return p > random.uniform(0.0, 1.0)
+
+def weighted_sampler(seq, weights):
+    totals = []
+    for w in weights:
+        totals.append(w + totals[-1] if totals else w)
+    return lambda: seq[bisect.bisect(totals, random.uniform(0, totals[-1]))]
