@@ -85,7 +85,22 @@ def local_beam_search(problem: Problem, k=10, max_nodes=10000):
         neighbors = list(set([candidate for node in nodes for candidate in node.expand(problem) if candidate.state not in visited]))
         nodes = sorted(neighbors, key=lambda node: problem.value(node.state))[:k]
         # update visited 
-        visited.update(neighbors)
+        visited.update(nodes)
+        if len(visited) > max_nodes:
+            break
+    return argmax_random_tie(nodes, lambda node: problem.value(node.state))
+
+# Stochastic local beam search
+def stochastic_local_beam_search(problem: Problem, k=10, max_nodes=10000):
+    nodes = [Node(problem.random_state()) for i in range(k)]
+    visited = set()  # closed list 
+    while True:
+        neighbors = list(set([candidate for node in nodes for candidate in node.expand(problem) if candidate.state not in visited]))
+        # choose k based weighted distribution
+        f_values = map(lambda node: problem.value(node.state), neighbors)
+        sampler = weighted_sampler(neighbors, f_values)
+        nodes = [sampler() for i in range(k)]
+        visited.update(nodes)
         if len(visited) > max_nodes:
             break
     return argmax_random_tie(nodes, lambda node: problem.value(node.state))
@@ -162,10 +177,126 @@ def mutate(x, gene_pool, pmut):
 def recombine_uniform(x, y):
     n = len(x)
     result = [0] * n
-    indexes = random.sample(range(n), n)
+    indexes = random.sample(range(n), n) # shuffle indices
     for i in range(n):
         idx = indexes[i]
         result[idx] = x[idx] if i < n/2 else y[idx]
     return "".join(str(r) for r in result)
+
+# Generate random population from gene pool
+def init_population(pop_number: int, gene_pool, state_length: int):
+    population = []
+    g = len(gene_pool)
+    for i in range(pop_number):
+        new_individual = [gene_pool[random.randrange(0, g) for j in range(state_length)]
+        population.append(new_individual)
+    return population
+
+
+# N queens problem incremental definition 
+class NQueensProblem(Problem):
+    def __init__(self, N):
+        super().__init__(tuple([-1] * N))
+        self.N = N
+
+    def actions(self, state):
+        """In the leftmost empty column, try all non-conflicting rows."""
+        if state[-1] != -1:
+            return []  # All columns filled; no successors
+        else:
+            col = state.index(-1)
+            return [row for row in range(self.N)
+                    if not self.conflicted(state, row, col)]
+
+    def result(self, state, row):
+        """Place the next queen at the given row."""
+        col = state.index(-1)
+        new = list(state[:])
+        new[col] = row
+        return tuple(new)
+
+    def conflicted(self, state, row, col):
+        """Would placing a queen at (row, col) conflict with anything?"""
+        return any(self.conflict(row, col, state[c], c)
+                   for c in range(col))
+
+    def conflict(self, row1, col1, row2, col2):
+        """Would putting two queens in (row1, col1) and (row2, col2) conflict?"""
+        return (row1 == row2 or  # same row
+                col1 == col2 or  # same column
+                row1 - col1 == row2 - col2 or  # same \ diagonal
+                row1 + col1 == row2 + col2)  # same / diagonal
+
+    def goal_test(self, state):
+        """Check if all columns filled, no conflicts."""
+        if state[-1] == -1:
+            return False
+        return not any(self.conflicted(state, state[col], col)
+                       for col in range(len(state)))
+
+    def h(self, node):
+        """Return number of conflicting queens for a given node"""
+        num_conflicts = 0
+        for (r1, c1) in enumerate(node.state):
+            for (r2, c2) in enumerate(node.state):
+                if (r1, c1) != (r2, c2):
+                    num_conflicts += self.conflict(r1, c1, r2, c2)
+
+        return num_conflicts
+
+# For local search 
+class CompleteStateNQueens(Problem):
+    def __init__(self, N):
+        self.N = N
+        super().__init__(self.random_state()) # change 
+
+    def random_state(self):
+        return tuple([r for c in range(self.N) for r in range(self.N)])
+
+    def actions(self, state):
+        """
+        Change any column to any value not already in. Conflicting states are allowed. 
+        """
+        return [tuple(r, c) for r in range(self.N) for c in range(self.N)
+                if state[c] != r]
     
-# 8 queens problem
+    def result(self, state, action):
+        """
+        action: tuple(row, col)
+        """
+        new = list(state[:])
+        new[action[1]] = action[0]
+        return tuple(new) 
+
+    def conflicted(self, state, row, col):
+        """Would placing a queen at (row, col) conflict with anything?"""
+        return any(self.conflict(row, col, state[c], c)
+                   for c in range(col))
+
+    def conflict(self, row1, col1, row2, col2):
+        """Would putting two queens in (row1, col1) and (row2, col2) conflict?"""
+        return (row1 == row2 or  # same row
+                col1 == col2 or  # same column
+                row1 - col1 == row2 - col2 or  # same \ diagonal
+                row1 + col1 == row2 + col2)  # same / diagonal
+
+    def goal_test(self, state):
+        """Check if no conflicts."""
+        return not any(self.conflicted(state, state[col], col)
+                       for col in range(len(state)))
+
+    def h(self, node):
+        """Return number of conflicting queens for a given node"""
+        num_conflicts = 0
+        for (r1, c1) in enumerate(node.state):
+            for (r2, c2) in enumerate(node.state):
+                if (r1, c1) != (r2, c2):
+                    num_conflicts += self.conflict(r1, c1, r2, c2)
+        return num_conflicts
+
+# Use Genetic algorithm to solve N queens
+def nqueens_genetic_algorithm(problem: CompleteStateNQueens, ngen=1000, pmut=0.1, n=20):
+    # randomly generate an initial population of n states
+    population = [problem.random_state() for i in range(n)]
+    return genetic_algorithm(population, lambda node: problem.N - problem.h(node), [i in range(N)], N, ngen, pmut)
+    
