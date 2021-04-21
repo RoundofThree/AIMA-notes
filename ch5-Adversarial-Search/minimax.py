@@ -112,6 +112,7 @@ class TicTacToe(Game):
         n -= 1  # Because we counted move itself twice
         return n >= self.k
 
+# ___________________________________________________________________________
 # Naive minimax adversarial search: return next optimal move
 def minmax(state, game):
     """Calculate the best move."""
@@ -141,6 +142,7 @@ def minmax(state, game):
     # main body of the algorithm 
     value, move = max_value(state)
     return move 
+
 
 # alpha-beta pruning 
 def alpha_beta_search(state, game):
@@ -177,7 +179,7 @@ def alpha_beta_search(state, game):
     value, move = max_value(state, -np.inf, np.inf) 
     return value 
 
-# 
+# Alpha beta with cutoff test and heuristic evaluation function 
 def alpha_beta_cutoff_search(state, game, d=4, cutoff_test=None, eval_fn=None):
     player = game.to_move(state) 
 
@@ -215,3 +217,16 @@ def alpha_beta_cutoff_search(state, game, d=4, cutoff_test=None, eval_fn=None):
             best_score = v
             move = a 
     return move 
+
+# Probabilistic cut algorithm
+
+# Iterative deepening minimax 
+
+# Stochastic alpha beta minimax 
+
+# Monte Carlo alpha beta simulation
+
+# TODO: chess player (with time limit) with all improvements:
+# Transposition table, iterative deepening with dynamic killer move heuristics,
+# Material value heuristics, quiescence search, singular extension, 
+# probabilistic cut forward pruning, table lookup for opening and endgames

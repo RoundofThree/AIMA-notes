@@ -159,6 +159,8 @@ It applies DFS.
 
 The agent maintains:
 - Map `RESULT[s, a]`
+- Dict `UNBACKTRACKED[s]` to parent state
+- Dict `UNTRIED[s]` to untried actions (branches)
 
 If the goal is right next to the initial state, the agent may waste a lot of time exploring
 the other branch before backtracking and returning. To solve this problem, an **iterative deepening DFS** variant can be used, which is very effective for uniform trees.  
