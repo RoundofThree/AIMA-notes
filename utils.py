@@ -7,6 +7,8 @@ def is_in(elt, seq):
     """Similar to (elt in seq), but comparing with 'is' """
     return any(x is elt for x in seq)
 
+def first(iterable, default=None):
+    return next(iter(iterable), default)
 
 def memoize(fn, slot=None, maxsize=32):
     """Memoize fn: make it remember the computed value for any argument list.
@@ -182,6 +184,10 @@ def shuffled(iterable):
 
 # __________________________________________________________________________________
 # Maths and statistics
+
+def count(elements):
+    """Count the True values in the array"""
+    return sum(map(bool, elements))
 
 def probability(p):
     """Return true with probability p."""
