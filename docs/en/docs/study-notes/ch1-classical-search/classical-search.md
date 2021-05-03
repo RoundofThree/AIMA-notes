@@ -7,6 +7,7 @@ Representation: atomic.
 Environment: observable, discrete, known, deterministic. 
 
 Process: 
+
 - Goal formulation -> set of states to consider a goal. Goal helps organize the behavior by limiting the objectives of the agent. 
 - Problem formulation -> level of detail of actions and states. Avoid too much detail that brings uncertainty. 
 - Search algorithm -> take problem and output a sequence of actions as solution 
@@ -36,6 +37,7 @@ problem.successors(state: State) -> list(State)
 ```
 
 Defines goal and performance measures:
+
 - Goal test
 - Path cost (sum of step costs)
 
