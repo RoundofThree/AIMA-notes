@@ -16,6 +16,7 @@ theme:
   icon:
     repo: fontawesome/brands/github-alt
   logo: https://roundofthree.github.io/favicon.png
+  favicon: https://roundofthree.github.io/favicon.png
   features:
   - navigation.tabs
   - navigation.tabs.sticky
@@ -38,6 +39,8 @@ nav:
 - Exercises:
   - exercises/tutorial-1/tutorial-1.md
   - exercises/tutorial-2/tutorial-2.md
+  - exercises/tutorial-3/tutorial-3.md
+  - exercises/tutorial-4/tutorial-4.md
   - exercises/tutorial-6/tutorial-6.md
 markdown_extensions:
 - admonition

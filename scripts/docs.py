@@ -58,8 +58,8 @@ def get_base_lang_config(lang: str):
     new_config["site_url"] = default_config["site_url"] + f"{lang}/"
     new_config["theme"]["logo"] = url_base + \
         default_config["theme"]["logo"]
-    # new_config["theme"]["favicon"] = url_base + \
-    #     default_config["theme"]["favicon"]
+    new_config["theme"]["favicon"] = url_base + \
+        default_config["theme"]["favicon"]
     new_config["theme"]["language"] = lang
     new_config["nav"] = default_config["nav"][:1]
     extra_css = []

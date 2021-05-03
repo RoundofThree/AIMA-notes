@@ -67,12 +67,12 @@ $C1 \land C2$
 
 The constraint $C1$ expressed as binary relations:
 
-- For scope $(F, E)$: $\{(autonomous, human-op), (human-op, autonomous)\}$
-- For scope $(F, A)$: $\{(autonomous, human-op), (human-op, autonomous)\}$
-- For scope $(F, D)$: $\{(autonomous, human-op), (human-op, autonomous)\}$
-- For scope $(E, A)$: $\{(autonomous, human-op), (human-op, autonomous)\}$
-- For scope $(E, D)$: $\{(autonomous, human-op), (human-op, autonomous)\}$
-- For scope $(A, D)$: $\{(autonomous, human-op), (human-op, autonomous)\}$
+- For scope $(F, E)$: $\{(autonomous, human-op), (human-op, autonomous), (human-op, human-op)\}$
+- For scope $(F, A)$: $\{(autonomous, human-op), (human-op, autonomous), (human-op, human-op)\}$
+- For scope $(F, D)$: $\{(autonomous, human-op), (human-op, autonomous), (human-op, human-op)\}$
+- For scope $(E, A)$: $\{(autonomous, human-op), (human-op, autonomous), (human-op, human-op)\}$
+- For scope $(E, D)$: $\{(autonomous, human-op), (human-op, autonomous), (human-op, human-op)\}$
+- For scope $(A, D)$: $\{(autonomous, human-op), (human-op, autonomous), (human-op, human-op)\}$
 
 The constraint $C2$ implies a unary relation: 
 
@@ -85,10 +85,33 @@ The constraint $C2$ implies a unary relation:
 
 Steps:
 
-1. `REVISE(csp, var=E)`
+1. `REVISE(csp, E, A)`
+    1. For $E = autonomous$:
+        1. A valid assignment to $A$ is $A = human-op$, so $autonomous$ is not pruned from $dom(E)$
+    2. For $E = human-op$:
+        1. A valid assignment to $A$ is $A = human-op$ or $A = autonomous$, so $human-op$ is not pruned from $dom(E)$
+1. `REVISE(csp, A, E)`
+    1. For $A = autonomous$:
+        1. A valid assignment to $E$ is $E = human-op$, so $autonomous$ is not pruned from $dom(A)$
+    2. For $A = human-op$:
+        1. A valid assignment to $E$ is $E = human-op$ or $E = autonomous$, so $human-op$ is not pruned from $dom(A)$
 
-2. `REVISE(csp, var=A)`
+By revising the arc consistency of $(E, A)$ and $(A, E)$ no values are pruned. If we revise all the variables against $F$:
+
+1. `REVISE(csp, E, F)`
+    1. For $E = autonomous$:
+        1. Given C1, $F = autonomous$, so there are no matching pairs in the binary relation. $autonomous$ is pruned from $dom(E)$
+    2. For $E = human-op$:
+        1. A valid assignment to $F$ is $F = autonomous$, so $human-op$ is not pruned from $dom(E)$
+
+After which $dom(E) = \{human-op\}$.
+
+The same process is applied for other variables:
+
+2. `REVISE(csp, A, F)` $\to dom(A) = \{human-op\}$
+3. `REVISE(csp, D, F)` $\to dom(D) = \{human-op\}$
+
 
 Solution:
 
-- $F = autonomous$, $E = human-op$, $A = human-op$
+- $F = autonomous$, $E = human-op$, $A = human-op$, $D = human-op$
