@@ -1,0 +1,83 @@
+site_name: AIMA notes
+site_description: Study notes on Artificial Intelligence book by Russell and Norvig.
+site_author: RoundofThree
+site_url: https://roundofthree.github.io/AIMA-notes/en/
+repo_name: RoundofThree/AIMA-notes
+repo_url: https://github.com/RoundofThree/AIMA-notes
+edit_uri: blob/master/docs/en/docs/
+copyright: Copyright &copy; RoundofThree
+theme:
+  name: material
+  language: en
+  palette:
+    primary: white
+    accent: red
+    scheme: preference
+  icon:
+    repo: fontawesome/brands/github-alt
+  logo: https://roundofthree.github.io/favicon.png
+  features:
+  - navigation.tabs
+  - navigation.tabs.sticky
+  - search.suggest
+  - search.highlight
+  - search.share
+  font:
+    text: Noto Sans
+    code: Source Code Pro
+plugins:
+- search
+- minify:
+    minify_html: true
+nav:
+- Start:
+  - index.md
+  - discussion.md
+- Study Notes:
+  - study-notes/ch1-classical-search/classical-search.md
+  - study-notes/ch1-classical-search/classical-search.md
+  - study-notes/ch1-classical-search/classical-search.md
+- Exercises:
+  - exercises/tutorial-1/tutorial-1.md
+  - exercises/tutorial-6/tutorial-6.md
+markdown_extensions:
+- admonition
+- md_in_html
+- codehilite:
+    guess_lang: false
+- def_list
+- footnotes
+- meta
+- toc:
+    permalink: true
+- pymdownx.arithmatex
+- pymdownx.caret
+- pymdownx.critic
+- pymdownx.details
+- pymdownx.emoji:
+    emoji_index: !!python/name:materialx.emoji.twemoji ''
+    emoji_generator: !!python/name:materialx.emoji.to_svg ''
+- pymdownx.highlight
+- pymdownx.inlinehilite
+- pymdownx.keys
+- pymdownx.magiclink
+- pymdownx.mark
+- pymdownx.smartsymbols
+- pymdownx.superfences:
+    custom_fences:
+    - name: mermaid
+      class: mermaid
+      format: !!python/name:pymdownx.superfences.fence_code_format ''
+- pymdownx.tasklist:
+    custom_checkbox: true
+- pymdownx.tilde
+extra:
+  alternate:
+  - link: /
+    name: en - English
+  copyright: CC BY-NC-SA 4.0
+extra_javascript:
+- https://roundofthree.github.io/static/js/extra.js
+- https://cdnjs.loli.net/ajax/libs/pangu/3.3.0/pangu.min.js
+- https://cdnjs.loli.net/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML
+extra_css: null

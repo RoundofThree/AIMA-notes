@@ -373,7 +373,13 @@ def min_conflicts_val(csp: CSP, var, assignment):
     return argmin_random_tie(csp.domains[var], key=lambda val: csp.nconflicts(var, val, assignment))
 
 # CSP tree solver
-
+def csp_tree_solver(csp: CSP):
+    assignment = {}
+    # check is tree 
+    # topological sort
+    # enforce consistency for each edge 
+    # fill the assignment  
+    return assignment 
 
 # Cutset conditioning 
 
