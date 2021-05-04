@@ -41,7 +41,11 @@ nav:
   - exercises/tutorial-2/tutorial-2.md
   - exercises/tutorial-3/tutorial-3.md
   - exercises/tutorial-4/tutorial-4.md
+  - exercises/tutorial-5/tutorial-5.md
   - exercises/tutorial-6/tutorial-6.md
+  - exercises/tutorial-6/tutorial-7.md
+  - exercises/tutorial-6/tutorial-8.md
+  - exercises/tutorial-6/tutorial-9.md
 markdown_extensions:
 - admonition
 - md_in_html
