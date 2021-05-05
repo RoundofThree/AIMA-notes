@@ -78,6 +78,15 @@ The constraint $C2$ implies a unary relation:
 
 - For scope $(F)$: $\{(autonomous)\}$
 
+Therefore, by combining the two constraints:
+
+- For scope $(F, E)$: $\{(autonomous, human-op)\}$
+- For scope $(F, A)$: $\{(autonomous, human-op)\}$
+- For scope $(F, D)$: $\{(autonomous, human-op)\}$
+- For scope $(E, A)$: $\{(autonomous, human-op), (human-op, autonomous), (human-op, human-op)\}$
+- For scope $(E, D)$: $\{(autonomous, human-op), (human-op, autonomous), (human-op, human-op)\}$
+- For scope $(A, D)$: $\{(autonomous, human-op), (human-op, autonomous), (human-op, human-op)\}$
+
 ## Question f
 **Question**: Step through the process of maintaining arc consistency of your model by applying the $REVISE$ algorithm (in both directions) to the variables $E$ and $A$. Given the binary relation between them that you have constructed, are any values pruned from either domain?
 
