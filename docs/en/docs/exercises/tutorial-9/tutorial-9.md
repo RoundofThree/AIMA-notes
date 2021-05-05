@@ -34,6 +34,7 @@ How many solutions exist for this CSP?
 $\ldots$
 
 After the arc consistency preprocessing, 
+
 1. $dom(A) = \{1,2,3\}$
 2. $dom(B) = \{2,3,4\}$
 3. $dom(C) = \{3,4,5\}$

@@ -35,7 +35,11 @@ nav:
   - index.md
   - discussion.md
 - Study Notes:
-  - study-notes/ch1-classical-search/classical-search.md
+  - study-notes/ch2-intelligent-agents/intelligent-agents.md
+  - study-notes/ch3-classical-search/classical-search.md
+  - study-notes/ch4-local-search/local-search.md
+  - study-notes/ch5-adversarial-search/adversarial-search.md
+  - study-notes/ch6-csp/csp.md
 - Exercises:
   - exercises/tutorial-1/tutorial-1.md
   - exercises/tutorial-2/tutorial-2.md
