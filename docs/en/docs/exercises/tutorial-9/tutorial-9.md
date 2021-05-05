@@ -2,13 +2,13 @@
 
 ## Search algorithms
 
-| Algorithm | Complete | Optimal | Open list DST | Heuristics | Costs |
-| --- | --- | --- | --- | --- | --- |
-| BFS | Yes | Yes (for uniform cost) | Queue | No | No |
-| DFS | Incomplete if there are loops | No | Stack | No | No |
-| Uniform cost search | Yes | Yes | Priority queue | No | Yes |
-| Best-First search | Yes | No | Priority Queue | Yes | No |
-| $A^*$ search | Yes | Yes | Priority queue | Yes | Yes |
+| Algorithm | Complete | Optimal | DST | Heuristics or costs |
+| --- | --- | --- | --- | --- |
+| BFS | Yes | Yes (for uniform cost) | Queue | None |
+| DFS | Incomplete if there are loops | No | Stack | None |
+| Uniform cost search | Yes | Yes | Priority queue | Costs |
+| Best-First search | Yes | No | Priority queue | Heuristic |
+| $A^*$ search | Yes | Yes | Priority queue | Heuristic + costs |
 
 ## Heuristics 
 
